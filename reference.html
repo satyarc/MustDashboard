@@ -1,0 +1,72 @@
+<!-- This is a static file -->
+<!-- served from your routes in server.js -->
+
+<!-- You might want to try something fancier: -->
+<!-- html/nunjucks docs: https://mozilla.github.io/nunjucks/ -->
+<!-- pug: https://pugjs.org/ -->
+<!-- haml: http://haml.info/ -->
+<!-- hbs(handlebars): http://handlebarsjs.com/ -->
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>MUST Dashboard</title>
+    <meta name="description" content="Must Reasearch labs">
+    <link id="favicon" rel="icon" href="https://glitch.com/edit/favicon-app.ico" type="image/x-icon">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="/style.css">
+    <script type="text/javascript" src="https://d3js.org/d3.v4.min.js"></script>
+  </head>
+  <body>
+    <header>
+      <h1>
+        Must Research team distribution across the world
+      </h1>
+    </header>
+    <a href="/location">By Location</a><br>
+    <a href="/gender">By Gender</a><br>
+    <a href="/membership">By Membership</a><br>
+    <a href="/reference">By Reference</a><br><br>
+    <svg xmlns="http://www.w3.org/2000/svg" width="2000" height="2000 " font-family="sans-serif" font-size="10" text-anchor="middle"></svg>
+    <script type="text/javascript"> 
+        var mustMemeberCounts = JSON.parse(decodeURIComponent(document.cookie).split("=")[1]);
+        var distribution = [];
+        for (var reference in mustMemeberCounts['reference']){
+            distribution.push({
+                x: Math.random() * 500,
+                y: Math.random() * 500,
+                c: Math.round(Math.random() * 5),
+                label:reference,
+                size: mustMemeberCounts['reference'][reference]
+            }); 
+        }
+        d3.select("svg").selectAll("circle")
+                        .data(distribution)
+                        .enter()
+                        .insert("circle")                    
+                        .attr("cx", function (d) { return d.x; })
+                        .attr("cy", function (d) { return d.y; })
+                        .attr("r", function (d) { return( d.size >= 10 ? d.size : d.size * 5) ; })
+                        .style("fill", function (d) { return  d3.rgb(Math.round(Math.random() * 200),Math.round(Math.random() * 200),Math.round(Math.random() * 200)); })
+        d3.select("svg").selectAll("text")
+                        .data(distribution)
+                        .enter()
+                        .insert("text") 
+                        .attr("x", function(d) { return d.x; })
+                        .attr("y", function(d) { return d.y; })      
+                        .text( function (d) { return d.label; })
+                        .attr("font-family", "sans-serif")
+                        .attr("font-size", function (d) { return( d.size >= 10 ? "20px" : "10px") ; })
+                        .attr("fill", function (d) { return( d.size >= 10 ? "red" : "blue") ; });
+    </script>  
+    <p>MUST Dashboard:</p>
+    <footer>
+      <a href="http://must.co.in/">
+        Must Research
+      </a>
+    </footer>
+    <script src="/client.js"></script>
+  </body>
+</html>
